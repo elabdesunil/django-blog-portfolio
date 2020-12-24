@@ -25,8 +25,8 @@
 
 ### Features
 - A hompage with the portfolio and a blog index page.
-- Both porfolio and blog have detail page
-- Users can comment on blog page
+- Both porfolio and blog have detail pages.
+- Users can comment on blog page.
 
 ### Installation
 ```shell
