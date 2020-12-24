@@ -1,6 +1,9 @@
 # Django Portfolio
 
 - [Django Portfolio](#django-portfolio)
+  - [Summary](#summary)
+    - [Features](#features)
+    - [Installation](#installation)
   - [Start a Django Project](#start-a-django-project)
   - [[Optional] Create a Django Project `hello_world`](#optional-create-a-django-project-hello_world)
     - [Install the new app](#install-the-new-app)
@@ -15,6 +18,41 @@
     - [blog App: Models](#blog-app-models)
     - [Blog App: Django Admin](#blog-app-django-admin)
     - [Blog App: Views](#blog-app-views)
+    - [blog App: Templates](#blog-app-templates)
+
+## Summary
+![Homepage](/homepage.png) ![Blog-Page](/blog-page.png)
+
+### Features
+- A hompage with the portfolio and a blog index page.
+- Both porfolio and blog have detail page
+- Users can comment on blog page
+
+### Installation
+```shell
+git clone https://github.com/sunilale0/django-blog-portfolio.git
+
+cd django-blog-portfolio/
+py -m venv .env
+```
+Activate virtual environment
+In Windows
+```shell
+.env\Source\activate
+```
+Linux/Mac
+```shell
+source .env\Source\activate
+```
+
+```shell
+pip install -r requirements.txt
+
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py migrate
+python manage.py runserver
+```
 
 ## Start a Django Project
 
@@ -54,12 +92,12 @@ python manage.py startapp hello_world
 
 This will create another directory `hello_world` with the following files:
 
-- **init**.py tells Python to treat the directory as a Python Package
-- admin.py contains settings for the django admin pages
-- apps.py contains settings for the application configuration
-- models.py contains a series of classes that Django's ORM converts to database tables
-- tests.py contains test classes
-- views.py contains functions and classes that handle what data is displayed in the HTML templates
+- `__init__.py` tells Python to treat the directory as a Python Package
+- `admin.py` contains settings for the django admin pages
+- `apps.py` contains settings for the application configuration
+- `models.py` contains a series of classes that Django's ORM converts to database tables
+- `tests.py` contains test classes
+- `views.py` contains functions and classes that handle what data is displayed in the HTML templates
 
 ### Install the new app
 
@@ -427,8 +465,8 @@ we have included `{% load static %}` tag to include static files such as images.
 Inside `src` attribute, we add the code `{% static project.image %}`. This tells Django to look inside the static files to find a file matching `project.image`.
 There is a link to `project_detail` page. `{% url 'project_detail' project.pk %}
 
-At this point, to add more styling: navigation bar and bootstrap contianer, some more changes have been made to `personal_portfolio/templates/base.html`
-Replace codes in `base.html` with the following.
+At this point, to add more styling: navigation bar and bootstrap container, some more changes have been made to `personal_portfolio/templates/base.html`
+Replace codes in `base.html` with the following. Modify the footer to add your name and website address.
 
 ```html
 <link
@@ -467,6 +505,15 @@ Replace codes in `base.html` with the following.
 </nav>
 
 <div class="container">{% block page_content %}{% endblock %}</div>
+
+<footer class="bg-light text-center text-lg-start footer fixed-bottom" style="bottom:0 !important">
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0);">
+    © 2020 Copyright:
+    <a class="text-dark" href="https://sunilale0.github.io/" target="_blank">Sunil Ale</a>
+  </div>
+  <!-- Copyright -->
+</footer>
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -652,7 +699,7 @@ from blog.models import Post, Comment
 
 def blog_index(request):
     # '-' sign tells Django to start with the largest value rather than the smallest, i.e. order by most recent post first
-    post = Post.objects.all().order_by('-created_on')
+    posts = Post.objects.all().order_by('-created_on')
     context={
         "posts":posts,
     }
@@ -733,6 +780,8 @@ def blog_detail(request, pk):
                 post=post
             )
             comment.save()
+            # this resets the form values to empty after the page refreshes in one valid submit
+            form = CommentForm()
 
     comments = Comment.objects.filter(post=post)
     context = {
@@ -769,3 +818,109 @@ urlpatterns = [
     path("blog/", include("blog.urls")),
 ]
 ```
+
+### blog App: Templates
+
+Create `blog/templates/blog_index.html`. Afterwards, we can visit all posts by visiting `127.0.0.1:8000/blog`.
+
+```html
+{% extends "base.html" %}
+{% block page_content %}
+<div class="col-md-8 offset-md-2">
+    <h1>Blog Index</h1>
+    <hr>
+    {% for post in posts %}
+    <h2><a href="{% url 'blog_detail' post.pk %}">{{ post.title  }}</a></h2>
+    <small>
+        {{ post.created_on.date }} | &nbsp;
+        Categories: &nbsp;
+        {% for category in post.categories.all %}
+        <a href="{% url 'blog_category' category.name %}">
+            {{ category.name }}
+        </a>&nbsp;
+        {% endfor %}
+    </small>
+    <p>{{ post.body | slice: ":400"}}...</p>
+    {% endfor %}
+</div>
+{% endblock %}
+```
+
+Create `blog/template/blog_category.html`. Afterwards, we can visit `127.0.0.1:8000/blog/python` to see all posts in `python` category.
+
+```html
+{% extends "base.html" %} {% block page_content %}
+<div class="col-md-8 offset-md-2">
+  <h1>{{ category | title }}</h1>
+  <hr />
+  {% for post in posts %}
+  <h2><a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a></h2>
+  <small>
+    {{ post.created_on.date }} | &nbsp; Categories: &nbsp; {% for category in
+    post.categories.all %}
+    <a href="{% url 'blog_category' category.name %}"> {{ category.name }} </a
+    >&nbsp; {% endfor %}
+  </small>
+  <p>{{post.body | slice:":400" }}...</p>
+  {% endfor %}
+</div>
+{% endblock %}
+```
+
+Create `blog/template/blog_detail.html`. Afterwards, we can visit `127.0.0.1:8000/blog/1` to access the first blog post.
+
+```html
+{% extends "base.html" %} {% block page_content %}
+<div class="col-md-8 offset-md-2">
+  <h1>{{ post.title }}</h1>
+  <small>
+    {{ post.created_on.date }} |&nbsp; Categories: &nbsp; {% for category in
+    post.categories.all %}
+    <a href="{% url 'blog_category' category.name %}"> {{ category.name }} </a>
+    {% endfor %}
+  </small>
+  <p>{{ post.body | linebreaks }}</p>
+  <h3>Leave a comment:</h3>
+  <form action="/blog/{{ post.pk }}/" method="post">
+    {% csrf_token %}
+    <div class="form-group">{{ form.author }}</div>
+    <div class="form-group">{{ form.body }}</div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <h3>Comments:</h3>
+  {% for comment in comments %}
+  <p>
+    On {{ comment.created_on.date }}&nbsp;
+    <b>{{ comment.author }} wrote: </b>
+  </p>
+  <p>{{ comment.body }}</p>
+  <hr />
+  {% endfor %}
+</div>
+{% endblock %}
+```
+
+Note: In `{{ post.body | linebreaks }}`, [linebreaks](https://docs.djangoproject.com/en/2.1/ref/templates/builtins/#linebreaks) registers line breaks as new paragraphs, so the ody doesn't appear as one long block of text.
+`action="/blog/{{ post.pk }}/"` points to the URL path of the page to which we are sending the post request to. In our case, it is the same page that is currently being visited.
+`csrf_token` has been added to provide security. `csrf` stands for "Cross Site Request Forgery", more on it [here](https://docs.djangoproject.com/en/3.1/ref/csrf/).
+
+To get the bootstrap styling on the author and body fields, we need to add the form-control class to the text inputs. Because Django renders the inputs for us when we include `{{ form.body }}` and `{{ form.author }}`, we can't add these classes in the template. That's why we added the attributes to the form widgets in the previous section. Remember in `class CommentForm` at [here](#projects-app-views)
+
+```python
+# ...
+widget=forms.TextInput(attrs={
+            "class":"form-control",  # here
+            "placeholder":"Your Name"
+        })
+# ...
+```
+Last task is to uncomment out link to the blog in the navigation bar.
+In `personal_portfolio/templates/base.html`:
+```html
+{% comment %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'blog_index' %}">Blog</a>
+    </li>
+{% endcomment %}
+```
+remove both `{% commment %}` and `{% endcomment %}`.

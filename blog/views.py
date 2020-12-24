@@ -4,7 +4,7 @@ from .forms import CommentForm
 
 def blog_index(request):
     # '-' sign tells Django to start with the largest value rather than the smallest, i.e. order by most recent post first
-    post = Post.objects.all().order_by('-created_on')
+    posts = Post.objects.all().order_by('-created_on')
     context={
         "posts":posts,
     }
@@ -34,6 +34,7 @@ def blog_detail(request, pk):
                 post=post
             )
             comment.save()
+            form = CommentForm()
 
     comments = Comment.objects.filter(post=post)
     context = {
