@@ -4,6 +4,7 @@
   - [Summary](#summary)
     - [Features](#features)
     - [Installation](#installation)
+  - [Tutorial](#tutorial)
   - [Start a Django Project](#start-a-django-project)
   - [[Optional] Create a Django Project `hello_world`](#optional-create-a-django-project-hello_world)
     - [Install the new app](#install-the-new-app)
@@ -52,6 +53,9 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
+
+## Tutorial
+The tutorial assumes that you have have knowledge of basic [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), and [Bootstrap](https://getbootstrap.com/docs/4.1/getting-started/introduction/). You may also want to refer to documentation of [Django-Template-Language](https://docs.djangoproject.com/en/3.1/topics/templates/) to grasp the basics. Also go through the documentation of [Django](https://docs.djangoproject.com/en/3.1/) during tutorial for more details.
 
 ## Start a Django Project
 
