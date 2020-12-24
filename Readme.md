@@ -914,7 +914,7 @@ widget=forms.TextInput(attrs={
         })
 # ...
 ```
-Last task is to uncomment out link to the blog in the navigation bar.
+Last task is to uncomment the link to the blog in the navigation bar.
 In `personal_portfolio/templates/base.html`:
 ```html
 {% comment %}
@@ -924,3 +924,7 @@ In `personal_portfolio/templates/base.html`:
 {% endcomment %}
 ```
 remove both `{% commment %}` and `{% endcomment %}`.
+
+Tutorial adapted [from](https://realpython.com/get-started-with-django-1/)
+Share your ideas at [#Discussions](https://github.com/sunilale0/django-blog-portfolio/discussions)
+Report your issues at [#Issues](https://github.com/sunilale0/django-blog-portfolio/issues)
