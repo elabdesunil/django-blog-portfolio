@@ -43,7 +43,7 @@ In Windows
 ```
 Linux/Mac
 ```shell
-source .env\Source\activate
+source .env\bin\activate
 ```
 
 ```shell
