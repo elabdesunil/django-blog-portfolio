@@ -925,6 +925,6 @@ In `personal_portfolio/templates/base.html`:
 ```
 remove both `{% commment %}` and `{% endcomment %}`.
 
-Tutorial adapted [from](https://realpython.com/get-started-with-django-1/)
-Share your ideas at [#Discussions](https://github.com/sunilale0/django-blog-portfolio/discussions)
-Report your issues at [#Issues](https://github.com/sunilale0/django-blog-portfolio/issues)
+Tutorial adapted [from](https://realpython.com/get-started-with-django-1/).
+Share your ideas at [#Discussions](https://github.com/sunilale0/django-blog-portfolio/discussions).
+Report your issues at [#Issues](https://github.com/sunilale0/django-blog-portfolio/issues).
